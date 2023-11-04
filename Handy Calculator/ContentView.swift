@@ -11,12 +11,13 @@ struct ContentView: View {
     // To hold final value of the evaluated expression
     @State var result: Double = 0
     @State var tempResult: Double = 0
+    @State var resultToShow: Double = 0
     @State var currentOperation: String = ""
     
     var body: some View {
         VStack {
             VStack {
-                Text(String(self.result))
+                Text(String(self.resultToShow))
             }
             VStack {
                 HStack{
@@ -55,10 +56,9 @@ struct ContentView: View {
         }
     
     func buildButton(buttonTap: Double) -> some View {
-        var tempResult = self.result
         return Button(action: {
-            tempResult = (tempResult * 10) + buttonTap
-            self.result = tempResult
+            self.result = (self.result * 10) + buttonTap
+            self.resultToShow = self.result
         }) {
             Text(String(Int(buttonTap)))
         }
@@ -68,6 +68,7 @@ struct ContentView: View {
         return Button(action: {
             switch buttonTap {
             case "C":
+                self.resultToShow = 0.0
                 self.result = 0.0
                 self.tempResult = 0.0
                 self.currentOperation = ""
@@ -80,12 +81,16 @@ struct ContentView: View {
                 self.tempResult = 0.0
                 self.currentOperation = ""
             case "+":
+                calculate()
                 operationUpdate(buttonTap)
             case "-":
+                calculate()
                 operationUpdate(buttonTap)
             case "*":
+                calculate()
                 operationUpdate(buttonTap)
             case "/":
+                calculate()
                 operationUpdate(buttonTap)
             case "=":
                 calculate()
@@ -106,16 +111,24 @@ struct ContentView: View {
     func calculate() {
         switch self.currentOperation {
         case "+":
+            self.currentOperation = ""
             self.result += self.tempResult
+            self.resultToShow = self.result
             self.tempResult = 0.0
         case "-":
-            self.result -= self.tempResult
+            self.currentOperation = ""
+            self.result = self.tempResult - self.result
+            self.resultToShow = self.result
             self.tempResult = 0.0
         case "*":
+            self.currentOperation = ""
             self.result *= self.tempResult
+            self.resultToShow = self.result
             self.tempResult = 0.0
         case "/":
-            self.result /= self.tempResult
+            self.currentOperation = ""
+            self.result = self.tempResult / self.result
+            self.resultToShow = self.result
             self.tempResult = 0.0
         default:
             self.result = self.result
