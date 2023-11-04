@@ -92,16 +92,7 @@ struct ContentView: View {
                 self.result /= 100
                 self.tempResult = 0.0
                 self.currentOperation = ""
-            case "+":
-                calculate()
-                operationUpdate(buttonTap)
-            case "-":
-                calculate()
-                operationUpdate(buttonTap)
-            case "*":
-                calculate()
-                operationUpdate(buttonTap)
-            case "/":
+            case "+", "-", "*", "/":
                 calculate()
                 operationUpdate(buttonTap)
             case "=":
@@ -123,28 +114,19 @@ struct ContentView: View {
     func calculate() {
         switch self.currentOperation {
         case "+":
-            self.currentOperation = ""
             self.result += self.tempResult
-            self.resultToShow = self.result
-            self.tempResult = 0.0
         case "-":
-            self.currentOperation = ""
             self.result = self.tempResult - self.result
-            self.resultToShow = self.result
-            self.tempResult = 0.0
         case "*":
-            self.currentOperation = ""
             self.result *= self.tempResult
-            self.resultToShow = self.result
-            self.tempResult = 0.0
         case "/":
-            self.currentOperation = ""
             self.result = self.tempResult / self.result
-            self.resultToShow = self.result
-            self.tempResult = 0.0
         default:
             self.result = self.result
         }
+        self.currentOperation = ""
+        self.resultToShow = self.result
+        self.tempResult = 0.0
     }
 }
 
