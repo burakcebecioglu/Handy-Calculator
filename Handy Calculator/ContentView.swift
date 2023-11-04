@@ -17,7 +17,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             VStack {
-                Text(String(self.resultToShow))
+                Text(buildResultStringToView())
             }
             VStack {
                 HStack{
@@ -54,6 +54,18 @@ struct ContentView: View {
             }
             .buttonStyle(.bordered)
         }
+    
+    func buildResultStringToView() -> String {
+        let doubleResult = self.resultToShow
+        var stringResult: String = ""
+        
+        if doubleResult > doubleResult.rounded(.towardZero) {
+            stringResult = String(doubleResult)
+        } else {
+            stringResult = String(Int(doubleResult))
+        }
+        return stringResult
+    }
     
     func buildButton(buttonTap: Double) -> some View {
         return Button(action: {
