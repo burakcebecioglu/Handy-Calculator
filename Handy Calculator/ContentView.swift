@@ -13,6 +13,8 @@ struct ContentView: View {
     @State var tempResult: Double = 0
     @State var resultToShow: Double = 0
     @State var currentOperation: String = ""
+    @State var decimalsEnabled: Bool = false
+    @State var decimalCount: Int = 0
     
     var body: some View {
         VStack {
@@ -59,7 +61,7 @@ struct ContentView: View {
         let doubleResult = self.resultToShow
         var stringResult: String = ""
         
-        if doubleResult > doubleResult.rounded(.towardZero) {
+        if decimalCount >= 1 || doubleResult > doubleResult.rounded(.towardZero) {
             stringResult = String(doubleResult)
         } else {
             stringResult = String(Int(doubleResult))
@@ -69,7 +71,12 @@ struct ContentView: View {
     
     func buildButton(buttonTap: Double) -> some View {
         return Button(action: {
-            self.result = (self.result * 10) + buttonTap
+            if decimalsEnabled {
+                decimalCount += 1
+                self.result += buttonTap * pow(10, Double(decimalCount * -1))
+            } else {
+                self.result = (self.result * 10) + buttonTap
+            }
             self.resultToShow = self.result
         }) {
             Text(String(Int(buttonTap)))
@@ -84,6 +91,7 @@ struct ContentView: View {
                 self.result = 0.0
                 self.tempResult = 0.0
                 self.currentOperation = ""
+                self.decimalsEnabled = false
             case "+/-":
                 self.result *= -1.0
                 self.tempResult = 0.0
@@ -95,11 +103,14 @@ struct ContentView: View {
             case "+", "-", "*", "/":
                 calculate()
                 operationUpdate(buttonTap)
+            case ".":
+                decimalsEnabled = true
             case "=":
                 calculate()
             default:
                 self.result = self.result
             }
+            self.decimalCount = 0
         }) {
             Text(buttonTap)
         }
@@ -127,6 +138,7 @@ struct ContentView: View {
         self.currentOperation = ""
         self.resultToShow = self.result
         self.tempResult = 0.0
+        self.decimalsEnabled = false
     }
 }
 
